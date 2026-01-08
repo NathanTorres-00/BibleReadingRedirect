@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to Today's Reading...</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .loading {
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0A70C3;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Redirecting to today's reading...</p>
+    </div>
+
+    <script>
+        // Complete reading plan data for 2026
+        const readingPlan = {
+            // January
+            "01-01": { nt: "Luke 1", whole: "Gen 1" },
+            "01-02": { nt: "Luke 2", whole: "Gen 2-3" },
+            "01-03": { nt: "Luke 3", whole: "Gen 4-5" },
+            "01-04": { nt: "Luke 4", whole: "Gen 6-8" },
+            "01-05": { nt: "Luke 5", whole: "Gen 9-10" },
+            "01-06": { nt: "Luke 6", whole: "Job 1-2" },
+            "01-07": { nt: "Luke 7", whole: "Job 3-4" },
+            "01-08": { nt: "Luke 8", whole: "Job 5-6" },
+            "01-09": { nt: "Luke 9", whole: "Job 7-8" },
+            "01-10": { nt: "Luke 10", whole: "Job 9-10" },
+            "01-11": { nt: "Luke 11", whole: "Job 11-12" },
+            "01-12": { nt: "Luke 12", whole: "Job 13-14" },
+            "01-13": { nt: "Luke 13", whole: "Job 15-16" },
+            "01-14": { nt: "Luke 14", whole: "Job 17-19" },
+            "01-15": { nt: "Luke 15", whole: "Job 20-21" },
+            "01-16": { nt: "Luke 16", whole: "Job 22-23" },
+            "01-17": { nt: "Luke 17", whole: "Job 24-26" },
+            "01-18": { nt: "Luke 18", whole: "Job 27-28" },
+            "01-19": { nt: "Luke 19", whole: "Job 29, Ps 121" },
+            "01-20": { nt: "Luke 20", whole: "Job 30-31" },
+            "01-21": { nt: "Luke 21", whole: "Job 32-33" },
+            "01-22": { nt: "Luke 22", whole: "Job 34" },
+            "01-23": { nt: "Luke 23", whole: "Job 35, Ps 6" },
+            "01-24": { nt: "Luke 24", whole: "Job 36" },
+            "01-25": { nt: "Acts 1", whole: "Job 37-38" },
+            "01-26": { nt: "Acts 2", whole: "Job 39-40" },
+            "01-27": { nt: "Acts 3", whole: "Job 41-42, Gen 11" },
+            "01-28": { nt: "Acts 4", whole: "Gen 12-14" },
+            "01-29": { nt: "Acts 5", whole: "Gen 15-17" },
+            "01-30": { nt: "Acts 6", whole: "Gen 18-19, Ps 61" },
+            "01-31": { nt: "Acts 7", whole: "Gen 20-21" },
+            
+            // February
+            "02-01": { nt: "Acts 8", whole: "Gen 22-23" },
+            "02-02": { nt: "Acts 9", whole: "Gen 24" },
+            "02-03": { nt: "Acts 10", whole: "Gen 25-26" },
+            "02-04": { nt: "Acts 11", whole: "Gen 27-28" },
+            "02-05": { nt: "Acts 12", whole: "Gen 29-30" },
+            "02-06": { nt: "Acts 13", whole: "Gen 31" },
+            "02-07": { nt: "Acts 14", whole: "Gen 32-33" },
+            "02-08": { nt: "Acts 15", whole: "Gen 34-35" },
+            "02-09": { nt: "Acts 16", whole: "Gen 36" },
+            "02-10": { nt: "Acts 17", whole: "Gen 37-38" },
+            "02-11": { nt: "Acts 18", whole: "Gen 39-40" },
+            "02-12": { nt: "Acts 19", whole: "Gen 41" },
+            "02-13": { nt: "Acts 20", whole: "Gen 42-43" },
+            "02-14": { nt: "Acts 21", whole: "Gen 44-45" },
+            "02-15": { nt: "Acts 22", whole: "Gen 46-47" },
+            "02-16": { nt: "Acts 23", whole: "Gen 48-49" },
+            "02-17": { nt: "Acts 24", whole: "Gen 50, Ex 1, Ps 140" },
+            "02-18": { nt: "Acts 25", whole: "Ex 2-3" },
+            "02-19": { nt: "Acts 26", whole: "Ex 4-5" },
+            "02-20": { nt: "Acts 27", whole: "Ex 6-7" },
+            "02-21": { nt: "Acts 28", whole: "Ex 8-9" },
+            "02-22": { nt: "Rom 1", whole: "Ex 10-11, Ps 31" },
+            "02-23": { nt: "Rom 2", whole: "Ex 12-13" },
+            "02-24": { nt: "Rom 3", whole: "Ex 14-15" },
+            "02-25": { nt: "Rom 4", whole: "Ex 16-17, Ps 24" },
+            "02-26": { nt: "Rom 5", whole: "Ex 18-19, Ps 19" },
+            "02-27": { nt: "Rom 6", whole: "Ex 20, Ps 119:1-48" },
+            "02-28": { nt: "Rom 7", whole: "Ex 21, Ps 119:49-96" },
+            
+            // March
+            "03-01": { nt: "Rom 8", whole: "Ex 22, Ps 119:97-136" },
+            "03-02": { nt: "Rom 9", whole: "Ex 23, Ps 119:137-176" },
+            "03-03": { nt: "Rom 10", whole: "Ex 24-25, Ps 129" },
+            "03-04": { nt: "Rom 11", whole: "Ex 26-27" },
+            "03-05": { nt: "Rom 12", whole: "Ex 28-29" },
+            "03-06": { nt: "Rom 13", whole: "Ex 30-31, Ps 132" },
+            "03-07": { nt: "Rom 14", whole: "Ex 32-33, Ps 1" },
+            "03-08": { nt: "Rom 15", whole: "Ex 34-35" },
+            "03-09": { nt: "Rom 16", whole: "Ex 36-37" },
+            "03-10": { nt: "John 1", whole: "Ex 38-39" },
+            "03-11": { nt: "John 2", whole: "Ex 40, Lev 1" },
+            "03-12": { nt: "John 3", whole: "Lev 2-4" },
+            "03-13": { nt: "John 4", whole: "Lev 5-6" },
+            "03-14": { nt: "John 5", whole: "Lev 7-8" },
+            "03-15": { nt: "John 6", whole: "Lev 9-10" },
+            "03-16": { nt: "John 7", whole: "Lev 11-12" },
+            "03-17": { nt: "John 8", whole: "Lev 13" },
+            "03-18": { nt: "John 9", whole: "Lev 14" },
+            "03-19": { nt: "John 10", whole: "Lev 15, Ps 103" },
+            "03-20": { nt: "John 11", whole: "Lev 16-17" },
+            "03-21": { nt: "John 12", whole: "Lev 18-19" },
+            "03-22": { nt: "John 13", whole: "Lev 20-21" },
+            "03-23": { nt: "John 14", whole: "Lev 22-23" },
+            "03-24": { nt: "John 15", whole: "Lev 24-25" },
+            "03-25": { nt: "John 16", whole: "Lev 26, Ps 12" },
+            "03-26": { nt: "John 17", whole: "Lev 27, Ps 136" },
+            "03-27": { nt: "John 18", whole: "Num 1" },
+            "03-28": { nt: "John 19", whole: "Num 2, Ps 46" },
+            "03-29": { nt: "John 20", whole: "Num 3, Ps 67" },
+            "03-30": { nt: "John 21", whole: "Num 4, Ps 21" },
+            "03-31": { nt: "1 Cor 1", whole: "Num 5-6" },
+            
+            // April
+            "04-01": { nt: "1 Cor 2", whole: "Num 7" },
+            "04-02": { nt: "1 Cor 3", whole: "Num 8-10" },
+            "04-03": { nt: "1 Cor 4", whole: "Num 11-12, Ps 148" },
+            "04-04": { nt: "1 Cor 5", whole: "Num 13-14, Ps 81" },
+            "04-05": { nt: "1 Cor 6", whole: "Num 15, Ps 90" },
+            "04-06": { nt: "1 Cor 7", whole: "Num 16" },
+            "04-07": { nt: "1 Cor 8", whole: "Num 17-18, Ps 73" },
+            "04-08": { nt: "1 Cor 9", whole: "Num 19-20, Ps 47" },
+            "04-09": { nt: "1 Cor 10", whole: "Num 21, Ps 49" },
+            "04-10": { nt: "1 Cor 11", whole: "Num 22, Ps 84" },
+            "04-11": { nt: "1 Cor 12", whole: "Num 23-24" },
+            "04-12": { nt: "1 Cor 13", whole: "Num 25-26" },
+            "04-13": { nt: "1 Cor 14", whole: "Num 27-28" },
+            "04-14": { nt: "1 Cor 15", whole: "Num 29" },
+            "04-15": { nt: "1 Cor 16", whole: "Num 30-31" },
+            "04-16": { nt: "2 Cor 1", whole: "Num 32, Ps 74" },
+            "04-17": { nt: "2 Cor 2", whole: "Num 33, Ps 65" },
+            "04-18": { nt: "2 Cor 3", whole: "Num 34-36" },
+            "04-19": { nt: "2 Cor 4", whole: "Deut 1-2" },
+            "04-20": { nt: "2 Cor 5", whole: "Deut 3-4" },
+            "04-21": { nt: "2 Cor 6", whole: "Deut 5-6, Ps 64" },
+            "04-22": { nt: "2 Cor 7", whole: "Deut 7-8, Ps 139" },
+            "04-23": { nt: "2 Cor 8", whole: "Deut 9-10, Ps 143" },
+            "04-24": { nt: "2 Cor 9", whole: "Deut 11-13" },
+            "04-25": { nt: "2 Cor 10", whole: "Deut 14-15, Ps 88" },
+            "04-26": { nt: "2 Cor 11", whole: "Deut 16-17, Ps 2" },
+            "04-27": { nt: "2 Cor 12", whole: "Deut 18-20" },
+            "04-28": { nt: "2 Cor 13", whole: "Deut 21-22, Ps 145" },
+            "04-29": { nt: "Gal 1", whole: "Deut 23-24, Ps 91" },
+            "04-30": { nt: "Gal 2", whole: "Deut 25-27" },
+            
+            // May
+            "05-01": { nt: "Gal 3", whole: "Deut 28" },
+            "05-02": { nt: "Gal 4", whole: "Deut 29-30, Ps 15" },
+            "05-03": { nt: "Gal 5", whole: "Deut 31-32" },
+            "05-04": { nt: "Gal 6", whole: "Deut 33-34, Ps 94" },
+            "05-05": { nt: "Eph 1", whole: "Josh 1-3" },
+            "05-06": { nt: "Eph 2", whole: "Josh 4-5, Ps 71" },
+            "05-07": { nt: "Eph 3", whole: "Josh 6-7" },
+            "05-08": { nt: "Eph 4", whole: "Josh 8-9" },
+            "05-09": { nt: "Eph 5", whole: "Josh 10-11" },
+            "05-10": { nt: "Eph 6", whole: "Josh 12-13" },
+            "05-11": { nt: "Phil 1", whole: "Josh 14-15" },
+            "05-12": { nt: "Phil 2", whole: "Josh 16-18" },
+            "05-13": { nt: "Phil 3", whole: "Josh 19-20, Ps 53" },
+            "05-14": { nt: "Phil 4", whole: "Josh 21-22" },
+            "05-15": { nt: "Col 1", whole: "Josh 23-24, Ps 99" },
+            "05-16": { nt: "Col 2", whole: "Judg 1-2, Ps 133" },
+            "05-17": { nt: "Col 3", whole: "Judg 3-4, Ps 14" },
+            "05-18": { nt: "Col 4", whole: "Judg 5-6" },
+            "05-19": { nt: "1 Th 1-2", whole: "Judg 7-8" },
+            "05-20": { nt: "1 Th 3-4", whole: "Judg 9-10" },
+            "05-21": { nt: "1 Th 5", whole: "Judg 11-13" },
+            "05-22": { nt: "2 Th 1-2", whole: "Judg 14-17" },
+            "05-23": { nt: "2 Th 3", whole: "Judg 18-20" },
+            "05-24": { nt: "Matt 1", whole: "Judg 21, Ruth 1-2" },
+            "05-25": { nt: "Matt 2", whole: "Ruth 3-4, Ps 68" },
+            "05-26": { nt: "Matt 3", whole: "1 Sam 1-3" },
+            "05-27": { nt: "Matt 4", whole: "1 Sam 4-7" },
+            "05-28": { nt: "Matt 5", whole: "1 Sam 8-9" },
+            "05-29": { nt: "Matt 6", whole: "1 Sam 10-12" },
+            "05-30": { nt: "Matt 7", whole: "1 Sam 13-14" },
+            "05-31": { nt: "Matt 8", whole: "1 Sam 15-16" },
+            
+            // June
+            "06-01": { nt: "Matt 9", whole: "1 Sam 17, Ps 144" },
+            "06-02": { nt: "Matt 10", whole: "1 Sam 18-19, Ps 59" },
+            "06-03": { nt: "Matt 11", whole: "1 Sam 20, Ps 83" },
+            "06-04": { nt: "Matt 12", whole: "1 Sam 21, Ps 34, 56" },
+            "06-05": { nt: "Matt 13", whole: "1 Sam 22, Ps 52, 57, 63, 142" },
+            "06-06": { nt: "Matt 14", whole: "1 Sam 23-24, Ps 54" },
+            "06-07": { nt: "Matt 15", whole: "1 Chr 1" },
+            "06-08": { nt: "Matt 16", whole: "1 Chr 2, Ps 87" },
+            "06-09": { nt: "Matt 17", whole: "1 Sam 25, 1 Chr 3" },
+            "06-10": { nt: "Matt 18", whole: "1 Sam 26, 1 Chr 4" },
+            "06-11": { nt: "Matt 19", whole: "1 Sam 27-28, 1 Chr 5" },
+            "06-12": { nt: "Matt 20", whole: "1 Chr 6" },
+            "06-13": { nt: "Matt 21", whole: "1 Sam 29, 1 Chr 7" },
+            "06-14": { nt: "Matt 22", whole: "1 Sam 30, 1 Chr 8" },
+            "06-15": { nt: "Matt 23", whole: "1 Sam 31, 1 Chr 9-10" },
+            "06-16": { nt: "Matt 24", whole: "2 Sam 1, Ps 85" },
+            "06-17": { nt: "Matt 25", whole: "2 Sam 2, 1 Chr 11" },
+            "06-18": { nt: "Matt 26", whole: "2 Sam 3" },
+            "06-19": { nt: "Matt 27", whole: "2 Sam 4, Ps 22" },
+            "06-20": { nt: "Matt 28", whole: "1 Chr 12, Ps 37" },
+            "06-21": { nt: "1 Tim 1", whole: "2 Sam 5, 1 Chr 13-14, Ps 30" },
+            "06-22": { nt: "1 Tim 2-3", whole: "2 Sam 6, 1 Chr 15, Ps 122" },
+            "06-23": { nt: "1 Tim 4", whole: "1 Chr 16, Ps 105" },
+            "06-24": { nt: "1 Tim 5", whole: "2 Sam 7, 1 Chr 17, Ps 23" },
+            "06-25": { nt: "1 Tim 6", whole: "2 Sam 8, 1 Chr 18, Ps 60" },
+            "06-26": { nt: "2 Tim 1", whole: "2 Sam 10, 1 Chr 19-20, Ps 107" },
+            "06-27": { nt: "2 Tim 2", whole: "2 Sam 11-12, Ps 51" },
+            "06-28": { nt: "2 Tim 3", whole: "2 Sam 13-14" },
+            "06-29": { nt: "2 Tim 4", whole: "2 Sam 15, Ps 3, Ps 89" },
+            "06-30": { nt: "Titus 1", whole: "2 Sam 16-18, Ps 7, Ps 41" },
+            
+            // July
+            "07-01": { nt: "Titus 2", whole: "2 Sam 19-21" },
+            "07-02": { nt: "Titus 3", whole: "2 Sam 22, Ps 18" },
+            "07-03": { nt: "Philemon", whole: "2 Sam 23-24, 1 Chr 21" },
+            "07-04": { nt: "Heb 1", whole: "1 Chr 22-24" },
+            "07-05": { nt: "Heb 2", whole: "1 Chr 25-26, Ps 62" },
+            "07-06": { nt: "Heb 3", whole: "1 Kg 1, 1 Chr 27" },
+            "07-07": { nt: "Heb 4", whole: "1 Kg 2, 1 Chr 28-29" },
+            "07-08": { nt: "Heb 5", whole: "1 Kg 3, 2 Chr 1, Ps 72" },
+            "07-09": { nt: "Heb 6", whole: "1 Kg 4, Ps 9" },
+            "07-10": { nt: "Heb 7", whole: "1 Kg 5-6, 2 Chr 2-3" },
+            "07-11": { nt: "Heb 8", whole: "1 Kg 7, 2 Chr 4" },
+            "07-12": { nt: "Heb 9", whole: "1 Kg 8, 2 Chr 5" },
+            "07-13": { nt: "Heb 10", whole: "2 Chr 6-7, Ps 127" },
+            "07-14": { nt: "Heb 11", whole: "1 Kg 9, 2 Chr 8" },
+            "07-15": { nt: "Heb 12", whole: "1 Kg 10, 2 Chr 9" },
+            "07-16": { nt: "Heb 13", whole: "Prov 1-2, Ps 128" },
+            "07-17": { nt: "James 1", whole: "Prov 3-4" },
+            "07-18": { nt: "James 2", whole: "Prov 5-6" },
+            "07-19": { nt: "James 3", whole: "Prov 7-8, Ps 123" },
+            "07-20": { nt: "James 4", whole: "Prov 9-11" },
+            "07-21": { nt: "James 5", whole: "Prov 12-13, Ps 149" },
+            "07-22": { nt: "1 Pet 1", whole: "Prov 14-15" },
+            "07-23": { nt: "1 Pet 2", whole: "Prov 16-17" },
+            "07-24": { nt: "1 Pet 3", whole: "Prov 18-19, Ps 16" },
+            "07-25": { nt: "1 Pet 4", whole: "Prov 20-21, Ps 11" },
+            "07-26": { nt: "1 Pet 5", whole: "Prov 22-23, Ps 101" },
+            "07-27": { nt: "2 Pet 1", whole: "Prov 24-25" },
+            "07-28": { nt: "2 Pet 2", whole: "Prov 26-27, Ps 98" },
+            "07-29": { nt: "2 Pet 3", whole: "Prov 28-29, Ps 48" },
+            "07-30": { nt: "1 John 1", whole: "Prov 30-31, Ps 96" },
+            "07-31": { nt: "1 John 2", whole: "Song 1-4" },
+            
+            // August
+            "08-01": { nt: "1 John 3", whole: "Song 5-8, Ps 13" },
+            "08-02": { nt: "1 John 4", whole: "1 Kg 11, Eccl 1" },
+            "08-03": { nt: "1 John 5", whole: "Eccl 2-4" },
+            "08-04": { nt: "2-3 John", whole: "Eccl 5-7" },
+            "08-05": { nt: "Jude", whole: "Eccl 8-10, Ps 150" },
+            "08-06": { nt: "Rev 1", whole: "Eccl 11-12, Ps 106" },
+            "08-07": { nt: "Rev 2", whole: "1 Kg 12, 2 Chr 10, Ps 125" },
+            "08-08": { nt: "Rev 3", whole: "1 Kg 13, 2 Chr 11, Ps 130" },
+            "08-09": { nt: "Rev 4-5", whole: "1 Kg 14, 2 Chr 12-13" },
+            "08-10": { nt: "Rev 6", whole: "1 Kg 15, 2 Chr 14-16" },
+            "08-11": { nt: "Rev 7", whole: "1 Kg 16-17, Ps 76" },
+            "08-12": { nt: "Rev 8-9", whole: "1 Kg 18-19" },
+            "08-13": { nt: "Rev 10-11", whole: "1 Kg 20-21" },
+            "08-14": { nt: "Rev 12", whole: "1 Kg 22, 2 Chr 17" },
+            "08-15": { nt: "Rev 13", whole: "2 Kg 1, 2 Chr 18-19, Ps 70" },
+            "08-16": { nt: "Rev 14", whole: "2 Kg 2-4" },
+            "08-17": { nt: "Rev 15-16", whole: "2 Kg 5, 2 Chr 20" },
+            "08-18": { nt: "Rev 17", whole: "2 Kg 6-7, Ps 115" },
+            "08-19": { nt: "Rev 18", whole: "2 Kg 8, 2 Chr 21, Ps 27" },
+            "08-20": { nt: "Rev 19", whole: "2 Kg 9-10" },
+            "08-21": { nt: "Rev 20", whole: "2 Chr 22-23, Ps 69" },
+            "08-22": { nt: "Rev 21", whole: "2 Kg 11-12, 2 Chr 24" },
+            "08-23": { nt: "Rev 22", whole: "Joel 1-3" },
+            "08-24": { nt: "Mark 1", whole: "Jonah 1-4" },
+            "08-25": { nt: "Mark 2", whole: "2 Kg 13, Ps 104" },
+            "08-26": { nt: "Mark 3", whole: "2 Kg 14, 2 Chr 25" },
+            "08-27": { nt: "Mark 4", whole: "Amos 1-3" },
+            "08-28": { nt: "Mark 5", whole: "Amos 4-6" },
+            "08-29": { nt: "Mark 6", whole: "Amos 7-9" },
+            "08-30": { nt: "Mark 7", whole: "Isa 1-2" },
+            "08-31": { nt: "Mark 8", whole: "Isa 3-5" },
+            
+            // September
+            "09-01": { nt: "Mark 9", whole: "2 Chr 26, Isa 6-7" },
+            "09-02": { nt: "Mark 10", whole: "2 Kg 15, 2 Chr 27" },
+            "09-03": { nt: "Mark 11", whole: "Hos 1-3, Ps 92" },
+            "09-04": { nt: "Mark 12", whole: "Hos 4-7" },
+            "09-05": { nt: "Mark 13", whole: "Hos 8-11" },
+            "09-06": { nt: "Mark 14", whole: "Hos 12-13" },
+            "09-07": { nt: "Mark 15", whole: "Hos 14, Micah 1-2, Ps 29" },
+            "09-08": { nt: "Mark 16", whole: "Micah 3-4, Ps 109" },
+            "09-09": { nt: "John 1", whole: "Micah 5-7" },
+            "09-10": { nt: "John 2", whole: "Isa 8-9, Ps 39" },
+            "09-11": { nt: "John 3", whole: "Isa 10-12" },
+            "09-12": { nt: "John 4", whole: "Isa 13-14" },
+            "09-13": { nt: "John 5", whole: "Isa 15-17" },
+            "09-14": { nt: "John 6", whole: "Isa 18-19" },
+            "09-15": { nt: "John 7", whole: "Isa 20-21, Ps 32" },
+            "09-16": { nt: "John 8", whole: "Isa 22-23" },
+            "09-17": { nt: "John 9", whole: "Isa 24-25, Ps 42" },
+            "09-18": { nt: "John 10", whole: "Isa 26-28" },
+            "09-19": { nt: "John 11", whole: "Isa 29-30" },
+            "09-20": { nt: "John 12", whole: "Isa 31-32, Ps 138" },
+            "09-21": { nt: "John 13", whole: "Isa 33-34, Ps 4" },
+            "09-22": { nt: "John 14", whole: "2 Kg 16, 2 Chr 28, Ps 113" },
+            "09-23": { nt: "John 15", whole: "2 Kg 17, Isa 35, Ps 8" },
+            "09-24": { nt: "John 16", whole: "2 Kg 18, 2 Chr 29" },
+            "09-25": { nt: "John 17", whole: "2 Chr 30-31" },
+            "09-26": { nt: "John 18", whole: "Isa 36-37" },
+            "09-27": { nt: "John 19", whole: "2 Kg 19, 2 Chr 32" },
+            "09-28": { nt: "John 20", whole: "2 Kg 20, Isa 38-39, Ps 134" },
+            "09-29": { nt: "John 21", whole: "Isa 40-41" },
+            "09-30": { nt: "Acts 1", whole: "Isa 42-43, Ps 82" },
+            
+            // October
+            "10-01": { nt: "Acts 2", whole: "Isa 44-45" },
+            "10-02": { nt: "Acts 3", whole: "Isa 46-47, Ps 35" },
+            "10-03": { nt: "Acts 4", whole: "Isa 48-49" },
+            "10-04": { nt: "Acts 5", whole: "Isa 50-51, Ps 58" },
+            "10-05": { nt: "Acts 6", whole: "Isa 52-54, Ps 102" },
+            "10-06": { nt: "Acts 7", whole: "Isa 55-57" },
+            "10-07": { nt: "Acts 8", whole: "Isa 58-59, Ps 5" },
+            "10-08": { nt: "Acts 9", whole: "Isa 60-61, Ps 111" },
+            "10-09": { nt: "Acts 10", whole: "Isa 62-64" },
+            "10-10": { nt: "Acts 11", whole: "Isa 65-66, Ps 124" },
+            "10-11": { nt: "Acts 12", whole: "2 Kg 21, 2 Chr 33, Ps 75" },
+            "10-12": { nt: "Acts 13", whole: "Nahum 1-3" },
+            "10-13": { nt: "Acts 14", whole: "2 Kg 22, 2 Chr 34" },
+            "10-14": { nt: "Acts 15", whole: "2 Kg 23, 2 Chr 35" },
+            "10-15": { nt: "Acts 16", whole: "Hab 1-3" },
+            "10-16": { nt: "Acts 17", whole: "Zeph 1-3" },
+            "10-17": { nt: "Acts 18", whole: "Jer 1-2" },
+            "10-18": { nt: "Acts 19", whole: "Jer 3-4" },
+            "10-19": { nt: "Acts 20", whole: "Jer 5-6" },
+            "10-20": { nt: "Acts 21", whole: "Jer 7-8" },
+            "10-21": { nt: "Acts 22", whole: "Jer 9-10, Ps 100" },
+            "10-22": { nt: "Acts 23", whole: "Jer 11-12, Ps 97" },
+            "10-23": { nt: "Acts 24", whole: "Jer 13-14, Ps 141" },
+            "10-24": { nt: "Acts 25", whole: "Jer 15-16, Ps 10" },
+            "10-25": { nt: "Acts 26", whole: "Jer 17-18" },
+            "10-26": { nt: "Acts 27", whole: "Jer 19-20, Ps 146" },
+            "10-27": { nt: "Acts 28", whole: "2 Kg 24, Jer 22, Ps 43" },
+            "10-28": { nt: "Rom 1", whole: "Jer 23, 25" },
+            "10-29": { nt: "Rom 2", whole: "Jer 26, 35-36" },
+            "10-30": { nt: "Rom 3", whole: "Jer 45-47, Ps 86" },
+            "10-31": { nt: "Rom 4", whole: "Jer 48-49" },
+            
+            // November
+            "11-01": { nt: "Rom 5", whole: "Jer 21, 24, 27, Ps 33" },
+            "11-02": { nt: "Rom 6", whole: "Jer 28-29, Ps 17" },
+            "11-03": { nt: "Rom 7", whole: "Jer 30-31" },
+            "11-04": { nt: "Rom 8", whole: "Jer 32-33" },
+            "11-05": { nt: "Rom 9", whole: "Jer 34, Jer 37-38" },
+            "11-06": { nt: "Rom 10", whole: "Jer 39, Jer 50" },
+            "11-07": { nt: "Rom 11", whole: "Jer 51" },
+            "11-08": { nt: "Rom 12", whole: "Jer 52, Ezek 1" },
+            "11-09": { nt: "Rom 13", whole: "Ezek 2-5" },
+            "11-10": { nt: "Rom 14", whole: "Ezek 6-8, Ps 117" },
+            "11-11": { nt: "Rom 15", whole: "Ezek 9-11" },
+            "11-12": { nt: "Rom 16", whole: "Ezek 12-14" },
+            "11-13": { nt: "Gal 1", whole: "Ezek 15-16" },
+            "11-14": { nt: "Gal 2", whole: "Ezek 17-18, Ps 20" },
+            "11-15": { nt: "Gal 3", whole: "Ezek 19-20" },
+            "11-16": { nt: "Gal 4", whole: "Ezek 21-22" },
+            "11-17": { nt: "Gal 5", whole: "Ezek 23-24" },
+            "11-18": { nt: "Gal 6", whole: "Ezek 25-26, Ps 118" },
+            "11-19": { nt: "Eph 1", whole: "Ezek 27-28" },
+            "11-20": { nt: "Eph 2", whole: "Ezek 29-30, Ps 147" },
+            "11-21": { nt: "Eph 3", whole: "Ezek 31-32, Ps 45" },
+            "11-22": { nt: "Eph 4", whole: "2 Kg 25, 2 Chr 36" },
+            "11-23": { nt: "Eph 5", whole: "Jer 40-41, Ps 38" },
+            "11-24": { nt: "Eph 6", whole: "Jer 42-44" },
+            "11-25": { nt: "Phil 1", whole: "Lam 1-2, Ps 79" },
+            "11-26": { nt: "Phil 2", whole: "Lam 3" },
+            "11-27": { nt: "Phil 3", whole: "Lam 4-5, Obadiah" },
+            "11-28": { nt: "Phil 4", whole: "Dan 1-2, Ps 137" },
+            "11-29": { nt: "1 Tim 1", whole: "Dan 3-4" },
+            "11-30": { nt: "1 Tim 2", whole: "Ezek 33-34, Ps 114" },
+            
+            // December
+            "12-01": { nt: "1 Tim 3", whole: "Ezek 35-36, Ps 77" },
+            "12-02": { nt: "1 Tim 4", whole: "Ezek 37-38, Ps 44" },
+            "12-03": { nt: "1 Tim 5", whole: "Ezek 39-40" },
+            "12-04": { nt: "1 Tim 6", whole: "Ezek 41-42, Ps 135" },
+            "12-05": { nt: "2 Tim 1", whole: "Ezek 43-44, Ps 112" },
+            "12-06": { nt: "2 Tim 2", whole: "Ezek 45-46, Ps 36" },
+            "12-07": { nt: "2 Tim 3", whole: "Ezek 47-48, Ps 26" },
+            "12-08": { nt: "2 Tim 4", whole: "Dan 5-6, Ps 131" },
+            "12-09": { nt: "Heb 1", whole: "Dan 7-8, Ps 116" },
+            "12-10": { nt: "Heb 2", whole: "Dan 9-10, Ps 50" },
+            "12-11": { nt: "Heb 3", whole: "Dan 11-12, Ps 95" },
+            "12-12": { nt: "Heb 4", whole: "Ezra 1-2" },
+            "12-13": { nt: "Heb 5", whole: "Ezra 3-4, Hag 1-2" },
+            "12-14": { nt: "Heb 6", whole: "Zech 1-3, Ps 55" },
+            "12-15": { nt: "Heb 7", whole: "Zech 4-6, Ps 66" },
+            "12-16": { nt: "Heb 8", whole: "Zech 7-9, Ps 25" },
+            "12-17": { nt: "Heb 9", whole: "Zech 10-12, Ps 40" },
+            "12-18": { nt: "Heb 10", whole: "Zech 13-14, Ps 80" },
+            "12-19": { nt: "Heb 11", whole: "Ezra 5-6, Ps 110" },
+            "12-20": { nt: "Heb 12", whole: "Esther 1-2, Ps 108" },
+            "12-21": { nt: "Heb 13", whole: "Esther 3-6, Ps 126" },
+            "12-22": { nt: "James 1", whole: "Esther 7-10" },
+            "12-23": { nt: "James 2", whole: "Ezra 7-8" },
+            "12-24": { nt: "James 3", whole: "Ezra 9-10, Ps 28" },
+            "12-25": { nt: "James 4", whole: "Neh 1-3, Ps 120" },
+            "12-26": { nt: "James 5", whole: "Neh 4-6, Ps 93" },
+            "12-27": { nt: "1 John 1", whole: "Neh 7-8" },
+            "12-28": { nt: "1 John 2", whole: "Neh 9-10" },
+            "12-29": { nt: "1 John 3", whole: "Neh 11-12" },
+            "12-30": { nt: "1 John 4", whole: "Neh 13, Mal 1-2" },
+            "12-31": { nt: "1 John 5", whole: "Mal 3-4, Ps 78" }
+        };
+
+        function getTodayDate() {
+            const today = new Date();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${month}-${day}`;
+        }
+
+        function parseReading(readingStr) {
+            if (!readingStr || readingStr.trim() === "") return [];
+            return readingStr.split(/[,O]/).map(s => s.trim()).filter(s => s.length > 0);
+        }
+
+        function createBibleGatewayUrl(chapters) {
+            if (chapters.length === 0) return "https://www.biblegateway.com/";
+            const passage = chapters.join(';');
+            return `https://www.biblegateway.com/passage/?search=${encodeURIComponent(passage)}&version=NKJV`;
+        }
+
+        // Auto-redirect on page load
+        window.onload = function() {
+            const dateKey = getTodayDate();
+            const reading = readingPlan[dateKey];
+            
+            if (reading) {
+                const ntChapters = parseReading(reading.nt);
+                const otChapters = parseReading(reading.whole);
+                const allChapters = [...ntChapters, ...otChapters];
+                const url = createBibleGatewayUrl(allChapters);
+                
+                // Redirect immediately
+                window.location.href = url;
+            } else {
+                // If no reading found, go to Bible Gateway homepage
+                window.location.href = "https://www.biblegateway.com/";
+            }
+        };
+    </script>
+</body>
+</html>
